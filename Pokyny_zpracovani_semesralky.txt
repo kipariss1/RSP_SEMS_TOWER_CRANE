@@ -1,0 +1,10 @@
+Pokyny pro vypracování semestrální práce
+
+    1.	Implementujte (tj. MATLAB/Simulink) nelineární model zvoleného systému. Shrňte všechny podstatné předpoklady, které byly použity pro vytvoření modelu systému s cílem 
+	získat prakticky použitelný model.
+    2. 	Analyzujte model (singulární body, stabilita). Model linearizujte ve zvoleném pracovním bodě. Analyzujte dynamické vlastnosti lineárního systému.
+    3.	Navrhněte řízení zvoleného systému s využitím pokročilých algoritmů návrhu (ŘSP). Simulačně ověřte vlastnosti navrženého regulačního obvodu jak na nelineárním, 
+	tak i na linearizovaném modelu.
+
+
+    Odevzdává se v zápočtovém týdnu nahráním do příslušného úkolu na Moodlu. Součástí odevzdaných souborů bude PDF referátu (může být vhodně formátovaný MLX soubor) a soubory obsahující dílčí výpočty a simulace. Vše v jednom adresáři pojmenovaném Vaším uživatelským jménem (do KOSu) a komprimované jako ZIP.
