@@ -11,6 +11,7 @@ syms x1         x2       x3         x4        x5          real
 %    alpha_dot  x_w_dot  theta_dot  x_w_ddot  theta_ddot
 syms x6         x7       x8         u1        u2          real
 
+
 %vyjadreni popisu ve stavove formulaci
 dx1 = x5;
 dx2 = x6;
@@ -77,6 +78,9 @@ crane_ss = ss(A_num, B_num, C, D);
 %TF = tf(A_num, B_num,C,D)
 TF = tf(crane_ss);
 pzmap(crane_ss);
+
+%% TODO - Niquistovo kriterium tady, mozna funkce citlivosti
+
 %grid on
 %sigma(crane_ss)
 
