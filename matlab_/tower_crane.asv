@@ -89,8 +89,13 @@ step(crane_ss)
 % !soustava je kmitava, na mezi stability coz odpovida mape nul a polu!
 
 figure(3);
-nyquist(crane_ss);
+[re,im,wout,sdre,sdim] = nyquist(crane_ss);
+grid on
 
+In1OnQ2Re = zeros(length(re));
+In2OnQ3Re = zeros(length(re));
+
+In1OnQ2 = zeros(length(re));
 %sigma(crane_ss)
 
 % [num1 den1] = ss2tf(A_num,B_num,C,D,1); % iu = 1
