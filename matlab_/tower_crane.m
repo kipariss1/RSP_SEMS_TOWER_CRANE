@@ -111,12 +111,12 @@ TFI2toQ1 = tf(crane_tf.Numerator(1,2), crane_tf.Denominator(1,2));
 [Gm12, Pm12] = margin(TFI1toQ2);
 [Gm21, Pm21] = margin(TFI2toQ1);
 figure(4);
-margin(TFI1toQ2)
+margin(TFI1toQ2);
 figure(5);
-margin(TFI2toQ1)
+margin(TFI2toQ1);
 
 %%PID%%
-rp = 2;
+rp = 10;
 ri = 49.05;
 rd = 0;
 
@@ -133,8 +133,10 @@ crane_tf_cl_12 = feedback(crane_tf_ol_12, 1);
 crane_tf_cl_21 = feedback(crane_tf_ol_21, 1);
 [Gm12c, Pm12c] = margin(crane_tf_cl_12);
 [Gm21c, Pm21c] = margin(crane_tf_cl_21);
-margin(crane_tf_cl_12)
-margin(crane_tf_cl_21)
+figure(6);
+margin(crane_tf_cl_12);
+figure(7);
+margin(crane_tf_cl_21);
 
 
 
