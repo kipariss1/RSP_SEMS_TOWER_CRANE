@@ -95,7 +95,6 @@ EigCrane = eig(A_num);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % State space --> Transfer function model%
-%           Decoupling                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 crane_tf = tf(crane_ss);
@@ -107,35 +106,19 @@ TFI2toQ1 = tf(crane_tf.Numerator(1,2), crane_tf.Denominator(1,2));
 
 
 %Vysetrovani stability
-
 [Gm12, Pm12] = margin(TFI1toQ2);
 [Gm21, Pm21] = margin(TFI2toQ1);
-figure(4);
-margin(TFI1toQ2)
-figure(5);
-margin(TFI2toQ1)
 
 %%PID%%
-rp = 2;
-ri = 49.05;
+rp = 0;
+ri = 0;
 rd = 0;
 
 reg_tf = tf([rp ri rd],[1 0]);
 
 %%Open-loop systems%%
 
-crane_tf_ol_12 = TFI1toQ2*reg_tf;
-crane_tf_ol_21 = TFI2toQ1*reg_tf;
-
-%%Closed-loop systems%%
-
-crane_tf_cl_12 = feedback(crane_tf_ol_12, 1);
-crane_tf_cl_21 = feedback(crane_tf_ol_21, 1);
-[Gm12c, Pm12c] = margin(crane_tf_cl_12);
-[Gm21c, Pm21c] = margin(crane_tf_cl_21);
-margin(crane_tf_cl_12)
-margin(crane_tf_cl_21)
-
+crane_tf_ol_12 = 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
