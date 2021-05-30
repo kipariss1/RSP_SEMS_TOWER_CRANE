@@ -91,6 +91,8 @@ step(crane_ss)
 figure(3);
 nyquist(crane_ss);
 
+EigCrane = eig(A_num);
+
 %sigma(crane_ss)
 
 % [num1 den1] = ss2tf(A_num,B_num,C,D,1); % iu = 1
