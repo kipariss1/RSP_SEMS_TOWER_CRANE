@@ -65,6 +65,15 @@ B_num = subs(B,x,xs);
 B_num = double(B_num);
 
 %matice C a D
+
+% C urcuje jake promenne chceme sledovat (v nasem pripade beta, alpha, x_w,
+% theta). Ale v realnem systemu nemuzeme sledovat treba uhly, takze pro
+% realny system muzeme sledovat (x_w a theta) --> matice by vypadala:
+% C = [0 0 0 0 0 0 0 0
+%      0 0 0 0 0 0 0 0
+%      0 0 1 0 0 0 0 0
+%      0 0 0 1 0 0 0 0];
+
 C = [1 0 0 0 0 0 0 0
      0 1 0 0 0 0 0 0
      0 0 1 0 0 0 0 0
@@ -110,10 +119,10 @@ TFI2toQ1 = tf(crane_tf.Numerator(1,2), crane_tf.Denominator(1,2));
 
 [Gm12, Pm12] = margin(TFI1toQ2);
 [Gm21, Pm21] = margin(TFI2toQ1);
-figure(4);
-margin(TFI1toQ2);
-figure(5);
-margin(TFI2toQ1);
+% figure(4);
+% margin(TFI1toQ2);
+% figure(5);
+% margin(TFI2toQ1);
 
 %%PID%%
 rp = 10;
@@ -133,10 +142,10 @@ crane_tf_cl_12 = feedback(crane_tf_ol_12, 1);
 crane_tf_cl_21 = feedback(crane_tf_ol_21, 1);
 [Gm12c, Pm12c] = margin(crane_tf_cl_12);
 [Gm21c, Pm21c] = margin(crane_tf_cl_21);
-figure(6);
-margin(crane_tf_cl_12);
-figure(7);
-margin(crane_tf_cl_21);
+% figure(6);
+% margin(crane_tf_cl_12);
+% figure(7);
+% margin(crane_tf_cl_21);
 
 
 
@@ -145,4 +154,37 @@ margin(crane_tf_cl_21);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      Stavova zpetna vazba             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Controllability %
+Con_crane = ctrb(A_num, B_num);
+
+rank(Con_crane);
+
+% soustava je reditelna, pokud rank(Con_crane) == rank(A_num)
+% , ale v nasem pripade je reditelny pokud rank(Con_crane) == 
+% == poctu stavovych promennych (kvuli tomu, ze mame ve stavovych 
+% promennych vstupy)
+
+% Vektor gainu pro feedback state space
+
+syms k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13 k14 k15 k16
+K = [k1 k2 k3 k4 k5 k6 k7 k8;...
+     k9 k10 k11 k12 k13 k14 k15 k16];
+             
+% Charakteristicky polynom
+syms s
+char_poly = det(s*eye(size(A_num))-A_num+B_num*K);
+
+% Predvoleni polu
+desired_poles = [-2.0000+3.0000*1j -2.0000-3.0000i -3 -3 -2.0000+3.0000*1j...
+                 -2.0000-3.0000*1j -3 -3];
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%END%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
