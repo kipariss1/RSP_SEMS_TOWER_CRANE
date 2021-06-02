@@ -17,9 +17,9 @@ dx1 = x5;
 dx2 = x6;
 dx3 = x7;
 dx4 = x8;
-dx5 = -1/(2*L)*(2*g*cos(x2)*sin(x1) + 4*x7*x8*cos(x1) - L*x8^2*sin(2*x1)*(cos(x2))^2 - 2*x3*x8^2*sin(x1)*sin(x2) ...
+dx5 = (-1/(2*L))*(2*g*cos(x2)*sin(x1) + 4*x7*x8*cos(x1) - L*x8^2*sin(2*x1)*(cos(x2))^2 - 2*x3*x8^2*sin(x1)*sin(x2) ...
 - 4*L*x6*x8*cos(x2)*(cos(x1))^2 + L*x6^2*sin(2*x1) + 2*sin(x1)*sin(x2)*u1 + 2*x3*cos(x1)*u2 - 2*L*sin(x2)*u2);
-dx6 = -1/(L*cos(x1))*(g*sin(x2) + x3*x8^2*cos(x2) - L*x8^2*sin(x2)*cos(x1)*cos(x2) + 2*L*x5*x8*cos(x1)*cos(x2) ...
+dx6 = (-1/(L*cos(x1)))*(g*sin(x2) + x3*x8^2*cos(x2) - L*x8^2*sin(x2)*cos(x1)*cos(x2) + 2*L*x5*x8*cos(x1)*cos(x2) ...
 - 2*L*x5*x6*sin(x1) - cos(x2)*u1 + L*sin(x1)*cos(x2)*u2);
 dx7 = u1;
 dx8 = u2;
@@ -55,12 +55,12 @@ f6 = dx6;
 f7 = dx7;
 f8 = dx8;
 
-A = jacobian([f1;f2;f3;f4;f5;f6;f7;f8],x);
+A = jacobian([f1, f2, f3, f4, f5, f6, f7, f8],x);
 A_num = subs(A,x,xs);
 A_num = subs(A_num,u,us);
 A_num = double(A_num);
 
-B = jacobian([f1;f2;f3;f4;f5;f6;f7;f8],u);
+B = jacobian([f1, f2, f3, f4, f5, f6, f7, f8],u);
 B_num = subs(B,x,xs);
 B_num = double(B_num);
 
@@ -76,13 +76,18 @@ B_num = double(B_num);
 
 C = [1 0 0 0 0 0 0 0
      0 1 0 0 0 0 0 0
-     0 0 1 0 0 0 0 0
-     0 0 0 1 0 0 0 0];
+     0 0 0 0 0 0 0 0
+     0 0 0 0 0 0 0 0];
 
 D = zeros(4, 2);
 
 %%%Stavovy popis - souhrn matic A, B, C, D
-crane_ss = ss(A_num, B_num, C, D);
+crane_ss = ss(A_num, B_num, C, D, 'StateName', {'beta', 'alpha', 'x_w',...
+    'theta' ,'dot_beta' , 'dot_alpha',...
+    'dot_x_w', 'dot_theta'}, 'InputName', {'ddot x_w', 'ddot theta'},...
+    'OutputName', {'beta', 'alpha', 'x_w', 'theta'});
+
+%pocatecni 
 
 %TF = tf(A_num, B_num,C,D)
 TF = tf(crane_ss);
@@ -181,8 +186,8 @@ syms s
 char_poly = det(s*eye(size(A_num))-A_num+B_num*K);
 
 % Predvoleni polu
-desired_poles = [-2.0000+3.0000*1j -2.0000-3.0000i -3.5 -3.7 -2.5000+3.0000*1j...
-                 -2.5000-3.0000*1j -4.5 -4.7];
+desired_poles = [-0.5000+1.0000*1j -0.5000-1.0000i -0.55 -0.56 -0.7500+1.0000*1j...
+                 -0.7500-1.0000*1j -0.61 -0.62];
              
              
 %% Reseni jako na papire %%
@@ -202,10 +207,32 @@ desired_poles = [-2.0000+3.0000*1j -2.0000-3.0000i -3.5 -3.7 -2.5000+3.0000*1j..
 
 K = place(A_num, B_num, desired_poles);
 
-% modifikovana soustava pomoci state space z
-crane_K = ss(A_num - B_num*K, B_num, C, D);
-
+% modifikovana soustava pomoci state space zpetne vazby
+crane_K = ss(A_num - B_num*K, B_num, C, D, 'StateName', {'beta', 'alpha', ...
+    'x_w', 'theta' ,'dot_beta' , 'dot_alpha',...
+    'dot_x_w', 'dot_theta'}, 'InputName', {'ddot x_w', 'ddot theta'},...
+    'OutputName', {'beta', 'alpha', 'x_w', 'theta'});
+% kontrola, ze poly modifikovaneho systemu nam vysly podle predpokladu
 crane_K_poles = pole(crane_K);
+
+% rescaling
+kr = -1./dcgain(crane_K);
+kr = kr';
+% step(kr*crane_K)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%END%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Stavova zpetna vazba s regulatorem   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% //TODO
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%END%%%%%%%%%%%%%%%%%%%%%%%
