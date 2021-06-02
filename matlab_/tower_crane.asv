@@ -202,24 +202,10 @@ desired_poles = [-2.0000+3.0000*1j -2.0000-3.0000i -3.5 -3.7 -2.5000+3.0000*1j..
 
 K = place(A_num, B_num, desired_poles);
 
-% modifikovana soustava pomoci state space zpetne vazby
+% modifikovana soustava pomoci state space z
 crane_K = ss(A_num - B_num*K, B_num, C, D);
-% kontrola, ze poly modifikovaneho systemu nam vysly podle predpokladu
+
 crane_K_poles = pole(crane_K);
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%END%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Stavova zpetna vazba s regulatorem   %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% //TODO
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%END%%%%%%%%%%%%%%%%%%%%%%%
