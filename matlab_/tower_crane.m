@@ -66,9 +66,11 @@ B_num = double(B_num);
 
 % matice C a D
 
-% C urcuje jake promenne chceme sledovat (v nasem pripade beta, alpha, x_w,
+% C (matice outputu) urcuje jake promenne chceme sledovat (v nasem pripade 
+% beta, alpha, x_w,
 % theta). Ale v realnem systemu nemuzeme sledovat treba uhly, takze pro
 % realny system muzeme sledovat (x_w a theta) --> matice by vypadala:
+
 % C = [0 0 0 0 0 0 0 0
 %      0 0 0 0 0 0 0 0
 %      0 0 1 0 0 0 0 0
@@ -77,8 +79,8 @@ B_num = double(B_num);
 % sledujeme jen alpha a beta
 C = [1 0 0 0 0 0 0 0
      0 1 0 0 0 0 0 0
-     0 0 0 0 0 0 0 0
-     0 0 0 0 0 0 0 0];
+     0 0 1 0 0 0 0 0
+     0 0 0 1 0 0 0 0];
 
 D = zeros(4, 2);
 
@@ -101,7 +103,7 @@ TF = tf(crane_ss);
 % pricny uhel reaguje na otaceni jerabu)
 % !soustava je kmitava, na mezi stability coz odpovida mape nul a polu!
 
-% figure(3);
+% figure(3);    
 % nyquist(crane_ss);
 
 EigCrane = eig(A_num);
@@ -185,8 +187,8 @@ syms s
 char_poly = det(s*eye(size(A_num))-A_num+B_num*K);
 
 % Predvoleni polu
-desired_poles = [-0.5000+1.0000*1j -0.5000-1.0000i -0.55 -0.56 -0.7500+1.0000*1j...
-                 -0.7500-1.0000*1j -0.61 -0.62];
+desired_poles = [-0.5000+0.0000*1j -0.5100-0.0000i -0.55 -0.56 -0.7500+0.0000*1j...
+                 -0.7600-0.0000*1j -0.61 -0.62];
              
              
 %% Reseni jako na papire %%
@@ -219,7 +221,11 @@ crane_K_poles = pole(crane_K);
 % rescaling 
 kr = -1./dcgain(crane_K);
 kr = kr';
-% step(kr*crane_K)
+% crane_K = ss(A_num - B_num*K, kr.*B_num, C, D, 'StateName', {'beta', 'alpha', ...
+%     'x_w', 'theta' ,'dot_beta' , 'dot_alpha',...
+%     'dot_x_w', 'dot_theta'}, 'InputName', {'ddot x_w', 'ddot theta'},...
+%     'OutputName', {'beta', 'alpha', 'x_w', 'theta'});
+step(crane_K)
 
 
 % ukazka odezvy na pocatecni podminky pro dukaz toho, ze model odpovida
