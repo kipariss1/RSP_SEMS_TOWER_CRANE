@@ -90,4 +90,37 @@ crane_ss = ss(A_num, B_num, C, D, 'StateName', {'beta', 'alpha', 'x_w',...
     'dot_x_w', 'dot_theta'}, 'InputName', {'ddot x_w', 'ddot theta'},...
     'OutputName', {'beta', 'alpha', 'x_w', 'theta'});
 
+% poly a nuly
+% pzmap(crane_ss);
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       H nek. pro MIMO              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Odezva:
+% step(crane_ss);
+
+
+% Amplitudova frekvencni charakteristika soustavy:
+% bodemag(crane_ss);
+
+% H nekonecno pro nas MIMO system 
+% sigma(crane_ss);
+% grid on
+
+% Zlomova frekvence:
+w_crossover = 10;
+
+% Bezpecnost citlivostni funkce:
+M_s = 1.5; %>=2
+
+% Trvala regulacni odchylka:
+A_s = 10e-3;    % co nejmensi
+
+% Vaha pro citlivostni funkce S:
+W1 = makeweight(1/A_s, [w_crossover, 1], 1/M_s); 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%              End                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
