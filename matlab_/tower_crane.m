@@ -225,7 +225,7 @@ crane_K = ss(A_num - B_num*K, kr.*B_num, C, D, 'StateName', {'beta', 'alpha', ..
     'x_w', 'theta' ,'dot_beta' , 'dot_alpha',...
     'dot_x_w', 'dot_theta'}, 'InputName', {'ddot x_w', 'ddot theta'},...
     'OutputName', {'beta', 'alpha', 'x_w', 'theta'});
-step(crane_K)
+% step(crane_K)
 
 
 % ukazka odezvy na pocatecni podminky pro dukaz toho, ze model odpovida
