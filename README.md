@@ -1,1 +1,1 @@
-# RSP_SEMS_TOWER_CRANE
+# Semesrální práce z předmětu ŘSP: "Tower crane"
