@@ -1,0 +1,5 @@
+Simulink autosave extension
+*.autosave
+
+# Simulink cache files
+*.slxc
