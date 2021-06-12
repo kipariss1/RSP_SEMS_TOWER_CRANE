@@ -225,7 +225,12 @@ crane_K = ss(A_num - B_num*K, kr.*B_num, C, D, 'StateName', {'beta', 'alpha', ..
     'x_w', 'theta' ,'dot_beta' , 'dot_alpha',...
     'dot_x_w', 'dot_theta'}, 'InputName', {'ddot x_w', 'ddot theta'},...
     'OutputName', {'beta', 'alpha', 'x_w', 'theta'});
-% step(crane_K)
+
+% odezva rescailovaneho systemu (! velky akcni zasah)
+% step(crane_K);
+
+% controla vlastnich cisel noveho systemu
+eig(A_num - B_num*K);
 
 
 % ukazka odezvy na pocatecni podminky pro dukaz toho, ze model odpovida
@@ -257,7 +262,31 @@ crane_K = ss(A_num - B_num*K, kr.*B_num, C, D, 'StateName', {'beta', 'alpha', ..
 %  Stavova zpetna vazba s regulatorem   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% //TODO
+% Rozsireny stavovy regulator:
+
+A_with_I = [
+           A_num zeros(length(A_num),1);
+           C zeros(size(C,1), 1)
+           ];
+% Aby matice A byla ctvercova       
+ A_with_I = [A_with_I zeros(abs(size(A_with_I,1) - size(A_with_I,2)), length(A_with_I))'];
+       
+       
+B_u_with_I = [B_num; zeros(size(B_num, 2), length(A_with_I) - length(B_num))'];
+
+
+B_r_with_I = zeros(size(B_u_with_I));
+B_r_with_I(end) = -1;
+
+poles_SS_feedback = [-0.5000+0.0000*1j -0.5100-0.0000i -0.55 -0.56 -0.7500+0.0000*1j...
+                 -0.7600-0.0000*1j -0.61 -0.62 -0.63 -0.64 -0.65 -0.66];
+K_with_I = place(A_with_I,B_u_with_I,poles_SS_feedback);
+
+% Chyba!! :
+% The "place" command could not place the poles at the specified locations. Probable causes include:
+% * (A,B) is nearly uncontrollable
+% * The specified locations are too close to each other.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
