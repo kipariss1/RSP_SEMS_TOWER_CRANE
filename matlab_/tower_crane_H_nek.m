@@ -106,8 +106,9 @@ crane_ss = ss(A_num, B_num, C, D, 'StateName', {'beta', 'alpha', 'x_w',...
 % bodemag(crane_ss);
 
 % H nekonecno pro nas MIMO system 
-% sigma(crane_ss);
-% grid on
+[sv, w] = sigma(crane_ss);
+max_sv = 20*log10(max(sv, [], 2));    % maximalni singularni hodnoty
+
 
 % Zlomova frekvence (10 rad/s):
 w_crossover = 10;   
